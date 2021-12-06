@@ -3,7 +3,12 @@
 ;; Specify packages that should be loaded
 (setq package-list
       '(web-mode
-        multiple-cursors))
+        multiple-cursors
+        lsp-mode
+        ccls
+        use-package
+        clang-format
+	sublime-themes))
 
 ;; list the repositories containing them
 (setq package-archives '(("elpa"      . "http://tromey.com/elpa/")
@@ -23,20 +28,80 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+;; Load theme
+(load-theme 'spolsky t)
+
+;; ====== External files ========
+
+;; Add the home folder to the load path
+(add-to-list 'load-path "~/")
+
+;; load my custom built packages
+(require '.handout)
+(require '.latex)
+(require '.auto-jump)
+
+;; ====== auto-jump ======
+
+(global-set-key (kbd "C-c SPC") 'auto-jump-deduce)
+(global-set-key (kbd "C-c M-t") 'toggle-handout)
+(global-set-key (kbd "C-c M-a") 'add-handout)
+
+;; ====== CCLS ======
+
+(use-package lsp-mode :commands lsp)
+
+(setq lsp-lens-enable nil)
+(setq lsp-enable-on-type-formatting nil)
+
+(use-package ccls
+  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+         (lambda () (require 'ccls) (lsp))))
+
+(setq ccls-executable (executable-find "ccls"))
+
 ;; ====== multiple-cursors settings ======
 
-(global-set-key (kbd "C-M-SPC") 'set-rectangular-region-anchor) 
+(global-set-key (kbd "C-M-SPC") 'set-rectangular-region-anchor)
 
-;; ====== functions ======
+;; ====== C mode ======
 
-;; make emacs open two vertical windows instead of horizontal
-(defun 2-windows-vertical-to-horizontal ()
-  "Make Emacs open two vertical windows instead of horizontal."
-  (let ((buffers (mapcar 'window-buffer (window-list))))
-    (when (<= 2 (length buffers))
-      (delete-other-windows)
-      (set-window-buffer (split-window-horizontally) (cadr buffers))
-      (switch-buffers-between-frames))))
+(add-hook 'c-mode-hook
+          '(lambda ()
+             (local-set-key [13] 'c-return)
+             (c-set-style "bsd")
+             (setq c-basic-offset 4)
+             (setq fill-column 60)
+             (c-set-offset 'substatement-open 0)))
+
+;; ====== C++ mode ======
+
+(require 'cc-mode)
+
+;; associate file names with c++-mode
+(add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.tcc\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.inl\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.h\\'"   . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.hpp\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cc\\'"  . c++-mode))
+
+(add-hook 'c++-mode-hook
+          '(lambda ()
+             (c-set-style "bsd")
+             (setq c-basic-offset 4)
+             (c-set-offset 'substatement-open 0)
+             (c-set-offset 'statement-cont 0)
+             (local-set-key [C-tab] 'clang-format-region)
+             (hs-minor-mode)
+             (local-set-key (kbd "M-s M-a") 'hs-show-block)
+             (local-set-key (kbd "M-s M-d") 'hs-hide-block)
+             (local-set-key (kbd "M-s M-s") 'hs-toggle-hiding)
+             (hide-ifdef-mode)
+             (local-set-key (kbd "M-s M-q") 'show-ifdef-block)
+             (local-set-key (kbd "M-s M-e") 'hide-ifdef-block)))
+
 
 ;; ====== settings ======
 
@@ -46,7 +111,7 @@
 (scroll-bar-mode -1)
 
 ;; font size
-(set-face-attribute 'default nil :height 90)
+(set-face-attribute 'default nil :height 110)
 
 ;; no tabs
 (setq-default indent-tabs-mode nil)
@@ -62,7 +127,7 @@
 (setq column-number-mode t)
 
 ;; show lines to the left
-(global-linum-mode t)
+(global-display-line-numbers-mode 1)
 
 ;; smooth scrolling
 (setq scroll-step 1)
@@ -73,23 +138,11 @@
 ;; make sure there is always a newline at end
 (setq require-final-newline t)
 
-;; make sure emacs open multiple files horizontally, not vertically
-(add-hook 'emacs-startup-hook '2-windows-vertical-to-horizontal)
-
 ;; Don't show the startup screen
 (setq inhibit-startup-screen t)
 
-;; ====== auto generated ======
+;; Don't wrap lines
+(set-default 'truncate-lines t)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (multiple-cursors web-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; ====== Auto generated ======
+

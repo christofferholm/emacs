@@ -1,0 +1,36 @@
+(provide '.handout)
+
+(defun toggle-handout ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let (stack '())
+      (while (search-forward "%%[" nil t)
+        (save-excursion
+          (let* ((start (point))
+                 (end (progn (search-forward "]" nil t) (point)))
+                 (command (buffer-substring start (- end 1))))
+            (cond ((string= command "HANDOUT")
+                   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
+                  ((string= command "BEGIN HANDOUT")
+                   (forward-char 1)
+                   (add-to-list 'stack (point-marker)))
+                  ((string= command "END HANDOUT")
+                   (goto-char (marker-position (car stack)))
+                   (set-marker (car stack) nil)
+                   (setq stack (cdr stack))
+                   (comment-or-uncomment-region (point) (- start 3))))))))))
+
+(defun handout-tag ()
+  (interactive)
+  (save-excursion
+    (let ((start (region-beginning))
+          (end   (region-end)))
+      (goto-char start)
+      (beginning-of-line)
+      (insert "%%[BEGIN HANDOUT]\n")
+      (goto-char end)
+      (forward-line)
+      (end-of-line)
+      (insert "\n%%[END HANDOUT]"))))
+      
