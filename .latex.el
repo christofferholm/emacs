@@ -137,9 +137,13 @@
 
 (defun latex-frame ()
   (interactive)
-  (let ((title (latex-find-previous-section-title))
-        (snippets '("\\begin{frame}{" "}\n\\framesubtitle{" "}\n" "\n\\end{frame}")))
-    (auto-jump-generate snippets (cons title '()))))
+  (let ((title (latex-find-previous-section-title)))
+    (if title
+        ;; if there is a previous section title then use it as a frame title
+        (auto-jump-generate '("\\begin{frame}{" "}\n\\framesubtitle{" "}\n" "\n\\end{frame}")
+                            (cons title '()))
+      ;; if there is no previous section title then there is no frame title at all
+      (auto-jump-generate '("\\begin{frame}\n\\framesubtitle{" "}\n" "\n\\end{frame}") '()))))
 
 (defun latex-handout-frame ()
   (interactive)
