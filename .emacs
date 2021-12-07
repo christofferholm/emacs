@@ -62,7 +62,24 @@
 
 ;; ====== multiple-cursors settings ======
 
+(require 'multiple-cursors)
+
+(defun multi-selection-up ()
+  (interactive)
+    (if (not (memq 'multi-selection-up mc/cmds-to-run-once))
+      (add-to-list 'mc/cmds-to-run-once 'multi-selection-up))
+  (mc/mark-previous-lines 1))
+
+(defun multi-selection-down ()
+  (interactive)
+  (if (not (memq 'multi-selection-down mc/cmds-to-run-once))
+      (add-to-list 'mc/cmds-to-run-once 'multi-selection-down))
+  (mc/mark-next-lines 1))
+
 (global-set-key (kbd "C-M-SPC") 'set-rectangular-region-anchor)
+
+(global-set-key [M-down] 'multi-selection-down)
+(global-set-key [M-up] 'multi-selection-up)
 
 ;; ====== C mode ======
 
