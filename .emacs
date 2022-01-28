@@ -6,13 +6,15 @@
         multiple-cursors
         lsp-mode
         ccls
+	company
         use-package
         clang-format
-	sublime-themes))
+        sublime-themes
+        highlight-doxygen))
 
 ;; list the repositories containing them
 (setq package-archives '(("elpa"      . "http://tromey.com/elpa/")
-			 ("melpa"     . "https://melpa.org/packages/")
+                         ("melpa"     . "https://melpa.org/packages/")
                          ("gnu"       . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")))
 
@@ -128,10 +130,15 @@
 (scroll-bar-mode -1)
 
 ;; font size
+
+;; Normal
 (set-face-attribute 'default nil :height 110)
 
+;; Lecture
+;; (set-face-attribute 'default nil :height 140)
+
 ;; no tabs
-(setq-default indent-tabs-mode nil)
+;; (setq-default indent-tabs-mode nil)
 
 ;; C-k kills entire line if at start of line
 (setq kill-whole-line t)
@@ -162,4 +169,3 @@
 (set-default 'truncate-lines t)
 
 ;; ====== Auto generated ======
-
