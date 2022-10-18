@@ -4,6 +4,7 @@
 (setq package-list
       '(web-mode
         multiple-cursors
+        flycheck
         lsp-mode
         ccls
 	company
@@ -42,6 +43,7 @@
 (require '.handout)
 (require '.latex)
 (require '.auto-jump)
+(require '.block-comment)
 
 ;; ====== auto-jump ======
 
@@ -52,6 +54,11 @@
 ;; ====== CCLS ======
 
 (use-package lsp-mode :commands lsp)
+
+(setq lsp-diagnostic-package :flycheck)
+(setq lsp-diagnostics-provider :flycheck)
+
+(setq lsp-enable-file-watchers nil)
 
 (setq lsp-lens-enable nil)
 (setq lsp-enable-on-type-formatting nil)
@@ -138,7 +145,7 @@
 ;; (set-face-attribute 'default nil :height 140)
 
 ;; no tabs
-;; (setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 
 ;; C-k kills entire line if at start of line
 (setq kill-whole-line t)
@@ -169,3 +176,18 @@
 (set-default 'truncate-lines t)
 
 ;; ====== Auto generated ======
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (haskell-mode highlight-doxygen sublime-themes clang-format use-package company ccls lsp-mode multiple-cursors web-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(put 'downcase-region 'disabled nil)
