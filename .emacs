@@ -38,12 +38,14 @@
 
 ;; Add the home folder to the load path
 (add-to-list 'load-path "~/")
+(add-to-list 'load-path "~/.emacs.d/elpa/doxymacs")
 
 ;; load my custom built packages
 (require '.handout)
 (require '.latex)
 (require '.auto-jump)
 (require '.block-comment)
+(require 'doxymacs)
 
 ;; ====== auto-jump ======
 
@@ -120,6 +122,7 @@
              (c-set-offset 'substatement-open 0)
              (c-set-offset 'statement-cont 0)
              (local-set-key [C-tab] 'clang-format-region)
+             (doxymacs-mode)
              (hs-minor-mode)
              (local-set-key (kbd "M-s M-a") 'hs-show-block)
              (local-set-key (kbd "M-s M-d") 'hs-hide-block)
