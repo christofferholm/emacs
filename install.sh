@@ -14,6 +14,7 @@ ln -s $root/.latex.el .latex.el
 ln -s $root/.manage.el .manage.el
 ln -s $root/.auto-jump.el .auto-jump.el
 ln -s $root/.handout.el .handout.el
+ln -s $root/.block-comment.el .block-comment.el
 popd > /dev/null
 
 # https://www.hiroom2.com/2016/10/31/emacs-doxymacs-package/#sec-1
