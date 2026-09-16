@@ -18,9 +18,8 @@ popd > /dev/null
 
 # https://www.hiroom2.com/2016/10/31/emacs-doxymacs-package/#sec-1
 
-if [ $# -lt 2 ];
+if ! [[ $# -lt 2 ]];
 then
-else
     pushd $2 > /dev/null
 
     tar zxf doxymacs-1.8.0.tar.gz
